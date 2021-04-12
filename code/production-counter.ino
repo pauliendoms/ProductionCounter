@@ -1,17 +1,16 @@
 // ---------------------------------------------------------------- //
-// Arduino Ultrasoninc Sensor HC-SR04
-// Re-writed by Arbi Abdul Jabbaar
-// Using Arduino IDE 1.8.7
-// Using HC-SR04 Module
-// Tested on 17 September 2019
+// Arduino Measeure your height. TEST
 // ---------------------------------------------------------------- //
 
 #define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
 
+#define SENS_HEIGHT 202
+
 // defines variables
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
+int height;
 
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
@@ -36,4 +35,9 @@ void loop() {
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
+
+  height = SENS_HEIGHT - distance;
+  Serial.print("Your height is: ");
+  Serial.print(height);
+  Serial.print(" cm");
 }
