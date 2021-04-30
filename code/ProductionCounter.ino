@@ -1,5 +1,10 @@
+/* algemeen ------------------ */
+
 #define DELAY 1000
 #define ENTER '#'
+
+int done;
+int number_of_people;
 
 /* keypad -------------------- */
 #include <Keypad.h>
@@ -88,10 +93,11 @@ float readTemperature() {
 
 /* functies ------------------------- */
 
-char numberOfPeople() {
+int numberOfPeople() {
   int number;
   char enter;
   char key;
+  done = 0;
 
   lcd.setCursor(0, 0);
   lcd.print("Number of people");
@@ -102,11 +108,14 @@ char numberOfPeople() {
   }
   lcd.print(key);
   while((enter = readKey()) == NO_KEY) {
-    if (enter == '#') {
-      lcd.clear();
-    }
+    // wait for key
   }
-  
+
+  if (enter == '#') {
+      done = 1;
+    }
+  Serial.println(done);
+  return key;
 }
 
 
@@ -124,5 +133,13 @@ void setup(){
 }
 
 void loop() {
-    numberOfPeople();
+    while(done == 0) {
+      number_of_people = numberOfPeople();
+    }
+
+    lcd.clear();
+    lcd.print("Number of people: ");
+    lcd.setCursor(0, 1);
+    lcd.print(String(number_of_people));
+    delay(5000);
 }
