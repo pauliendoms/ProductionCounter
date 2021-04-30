@@ -1,5 +1,9 @@
+#define DELAY 1000
+
 /* keypad -------------------- */
 #include <Keypad.h>
+
+char key;
 
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
@@ -15,13 +19,42 @@ byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
+char readKey() {
+  char key = keypad.getKey();
+  /*
+  if (key){
+    return key;
+  } --> deze check wordt gedaan in de loop */
+
+  return key;
+}
+
 
 /* ultrasonic ---------------- */
 
 #define ECHO_PIN 10
 #define TRIG_PIN 11
 
-int duration;
+long duration;
+int distance;
+
+float readDistance() {
+  // Clears the trigPin condition
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(ECHO_PIN, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+
+  Serial.println("Debug: distance = " + String(distance));
+
+  return distance;
+}
 
 
 /* lcd ----------------------- */
@@ -44,6 +77,14 @@ float temp;
 float waarde;
 float spanning;
 
+float readTemperature() {
+  waarde = analogRead(TEMP_PIN);
+  spanning = (waarde / 1024) * 5;
+  temp = spanning * 10;
+  //delay(1000); -> was nodig om een deftige waarde te krijgen als deze code in de loop stond
+  return temp;
+}
+
 /* ------------------------------------ */
 
 
@@ -51,7 +92,7 @@ float spanning;
 void setup(){
     pinMode(TRIG_PIN, OUTPUT); // Sets the trigPin as an OUTPUT
     pinMode(ECHO_PIN, INPUT);
-    // pinMode(TEMP_PIN, INPUT) -> ben niet zeker of dit erbij moet, eens testen of het werkt zonder
+    //pinMode(TEMP_PIN, INPUT); //-> ben niet zeker of dit erbij moet, eens testen of het werkt zonder
     Serial.begin(9600);
 
     lcd.init();
@@ -62,22 +103,16 @@ void setup(){
 
 void loop() {
     
-    /* KEYPAD TEST */
-    char key = keypad.getKey();
-  
-    if (key){
-    Serial.println(key);
-    }
+  Serial.println("temperature: " + String(readTemperature()));
+  delay(DELAY);
 
-    /* ULTROSONIC TEST */
+  key = readKey();
+  if(key) {
+    Serial.println("Key pressed: " + String(key));
+  }  
 
-    digitalWrite(TRIG_PIN, LOW);
-    delayMicroseconds(2);
-    digitalWrite(TRIG_PIN, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(TRIG_PIN, LOW);
-    duration = pulseIn(ECHO_PIN, HIGH);
-    delay(1000);
-    lcd.clear();
-    lcd.print(duration);
+  delay(DELAY);
+
+  Serial.println("Distance: " + String(readDistance()));
+  delay(DELAY);
 }
