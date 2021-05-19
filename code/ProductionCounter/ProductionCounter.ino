@@ -7,6 +7,7 @@
 int done;
 int number_of_people;
 int count = 0;
+int product_code;
 
 /* keypad -------------------- */
 #include <Keypad.h>
@@ -97,31 +98,70 @@ float readTemperature() {
 
 /* functies ------------------------- */
 
-char numberOfPeople() {
+char numberOfPeople() { //hier ook nog reset in verwerken (number of people -> nbr of people: )
   int number;
   char enter;
   char key;
-  done = 0;
 
+  lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Number of people");
+  lcd.print("Nbr of people:");
   lcd.setCursor(0, 1);
-  lcd.print("# = ENTER :");
+  lcd.print("#=ENTER *=RESET");
   while((key = readKey()) == NO_KEY) {
     // wait for key
   }
+  lcd.setCursor(14, 0);
   lcd.print(key);
   Serial.println(key);
+  while((enter = readKey()) == NO_KEY) { // hier kan ik nog een if enter = een getal dan wordt het getal nog mee aan de voorlopig string toegevoegd zoals bij de productcode om ook getallen hoger dan 9 te aanvaarden
+    // wait for key
+  }
+
+  if (enter == '#') {
+    done = 1;
+  } else if (enter == '*'){
+    done = 0;
+  }
+  Serial.println(key);
+  Serial.println(done);
+  return key;
+}
+
+int productcode() {
+  int code;
+  String tussenresultaat = "";
+  char key;
+  char enter;
+  char reset;
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Productcode:");
+  lcd.setCursor(0, 1);
+  lcd.print("#=ENTER *=RESET");
+  lcd.setCursor(12, 0);
+
+  while (tussenresultaat.length() < 4){
+    while((key = readKey()) == NO_KEY) {
+    // wait for key
+    }
+    tussenresultaat += key;
+    lcd.print(key);
+  }
+
   while((enter = readKey()) == NO_KEY) {
     // wait for key
   }
 
   if (enter == '#') {
       done = 1;
-    }
-  Serial.println(key);
-  Serial.println(done);
-  return key;
+      code = tussenresultaat.toInt();
+      return code;
+  } else if (enter == '*') {
+      done = 0;
+  }
+
 }
 
 int countProduction() {
@@ -152,18 +192,41 @@ void setup(){
 
 void loop() {
 
-  
     while(done == 0) {
-      number_of_people = (numberOfPeople()).toInt(); // dit klopt nog ni helemaal!!!
-      Serial.println(number_of_people + 6);
-      Serial.println(String(number_of_people));
+      number_of_people = numberOfPeople() - '0';
+      delay(1000);
+    }
+
+    done = 0;
+
+    while(done == 0) {
+      product_code = productcode();
+      delay(1000);
+    }
+
+    while(key != 'A') {
+
+      lcd.clear();
+      lcd.print("Press 'A' to");
+      lcd.setCursor(0, 1);
+      lcd.print("start counting.");
+      while((key = readKey()) == NO_KEY) {
+      // wait for key
+      }
     }
 
     lcd.clear();
-    lcd.print("Number of people: ");
-    lcd.setCursor(0, 1);
-    lcd.print(number_of_people);
-    delay(5000);
+    lcd.print("Counting...");
+
+    done = 0;
+
+    while(done == 0){
+      //wait
+    }
+
+
+
+    
 
   
 
