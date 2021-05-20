@@ -157,6 +157,7 @@ int productcode() {
   if (enter == '#') {
       done = 1;
       code = tussenresultaat.toInt();
+      Serial.println("r" + code);
       return code;
   } else if (enter == '*') {
       done = 0;
