@@ -102,6 +102,7 @@ char numberOfPeople() { //hier ook nog reset in verwerken (number of people -> n
   int number;
   char enter;
   char key;
+  String tussenresultaat = "";
 
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -118,14 +119,29 @@ char numberOfPeople() { //hier ook nog reset in verwerken (number of people -> n
     // wait for key
   }
 
+  tussenresultaat += key;
+
   if (enter == '#') {
     done = 1;
   } else if (enter == '*'){
     done = 0;
+  } else if (enter >= '0' && enter <= '9'){
+    tussenresultaat += enter;
+    lcd.print(enter);
+    while((enter = readKey()) == NO_KEY) { 
+      // wait for key
+    }
+
+    if (enter == '#') {
+    done = 1;
+    } else if (enter == '*'){
+    done = 0;
+    }
   }
-  Serial.println(key);
-  Serial.println(done);
-  return key;
+
+  number = tussenresultaat.toInt();
+  Serial.println("p" + String(number));
+  return number;
 }
 
 int productcode() {
@@ -157,7 +173,7 @@ int productcode() {
   if (enter == '#') {
       done = 1;
       code = tussenresultaat.toInt();
-      Serial.println("r" + code);
+      Serial.println("r" + String(code));
       return code;
   } else if (enter == '*') {
       done = 0;
@@ -194,7 +210,7 @@ void setup(){
 void loop() {
 
     while(done == 0) {
-      number_of_people = numberOfPeople() - '0';
+      number_of_people = numberOfPeople();
       delay(1000);
     }
 
@@ -218,14 +234,17 @@ void loop() {
 
     lcd.clear();
     lcd.print("Counting...");
+    Serial.println("A");
 
     done = 0;
 
     while(done == 0){
-      //wait
+      countProduction();
+      if (readKey() == 'B') {
+        done = 1;
+        Serial.println("B");
+      }
     }
-
-
 
     
 
