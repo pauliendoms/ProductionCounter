@@ -56,7 +56,10 @@ float readDistance() {
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(ECHO_PIN, HIGH);
+  duration = pulseIn(ECHO_PIN, HIGH); 
+
+  //Vair = (331.3 + 0.606 * Tc) m/s with vair = speed of sound and tc temperature in C
+
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
 
