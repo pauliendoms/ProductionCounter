@@ -9,6 +9,8 @@ int number_of_people;
 int count = 0;
 int product_code;
 float temperature;
+float workspeed;
+float workspeed_per_person;
 
 /* keypad -------------------- */
 #include <Keypad.h>
@@ -224,6 +226,8 @@ void setup(){
 
 void loop() {
 
+    done = 0;
+
     while(done == 0) {
       number_of_people = numberOfPeople();
       delay(1000);
@@ -256,13 +260,21 @@ void loop() {
     while(done == 0){
       countProduction();
       if (readKey() == 'B') {
-        done = 1;
+        done = 1; // nog timer toevoegen!
         Serial.println("B");
       }
     }
 
-    
+    while(key != 'C') {
 
+      lcd.clear();
+      lcd.print("Press 'C' to");
+      lcd.setCursor(0, 1);
+      lcd.print("start new count");
+      while((key = readKey()) == NO_KEY) {
+      // wait for key
+      }
+    }
   
 
   /*
