@@ -8,6 +8,7 @@ int done;
 int number_of_people;
 int count = 0;
 int product_code;
+float temperature;
 
 /* keypad -------------------- */
 #include <Keypad.h>
@@ -48,6 +49,10 @@ long duration;
 int distance;
 
 float readDistance() {
+
+  delay(DELAY);
+
+  float Vair;
   // Clears the trigPin condition
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
@@ -58,10 +63,17 @@ float readDistance() {
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(ECHO_PIN, HIGH); 
 
+  temperature = readTemperature();
+
+  //Serial.println("temp: " + String(temperature));
+
   //Vair = (331.3 + 0.606 * Tc) m/s with vair = speed of sound and tc temperature in C
+  Vair = (331.3 + 0.606 * temperature);
+
+  //Serial.println("Vair: " + String(Vair));
 
   // Calculating the distance
-  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  distance = (duration * (Vair/100) / 2)/100; // Speed of sound wave divided by 2 (go and back) (0.034)
 
   //Serial.println("Debug: distance = " + String(distance));
 
