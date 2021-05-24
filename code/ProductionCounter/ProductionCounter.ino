@@ -9,8 +9,10 @@ int number_of_people;
 int count = 0;
 int product_code;
 float temperature;
-float workspeed;
-float workspeed_per_person;
+float workspeed_seconds;
+float workspeed_per_person_seconds;
+float workspeed_minutes;
+float workspeed_per_person_minutes;
 unsigned long start_time;
 unsigned long stop_time;
 int minutes;
@@ -232,7 +234,7 @@ void loop() {
 
     done = 0;
 
-    Serial.print("C");
+    Serial.println("C");
 
     while(done == 0) {
       number_of_people = numberOfPeople();
@@ -260,6 +262,8 @@ void loop() {
     start_time = millis();
     lcd.clear();
     lcd.print("Counting...");
+    lcd.setCursor(0, 1);
+    lcd.print("'B'=FINISH");
     Serial.println("A");
     Serial.println("c" + String(count));
 
@@ -271,14 +275,34 @@ void loop() {
         done = 1; // nog timer toevoegen!
         Serial.println("B");
         stop_time = millis();
+
+        minutes = (stop_time - start_time) / 60000; // beter gericht op een grote productie
+        seconds = (stop_time - start_time) / 1000; // accurater en geeft een beter beeld bij deze kleine versie
+
+        delay(DELAY);
+
+        Serial.println("m" + String(minutes));
+        delay(DELAY);
+        Serial.println("s" + String(seconds));
+        delay(DELAY);
+
+        workspeed_seconds = float(count) / seconds;
+        workspeed_per_person_seconds = workspeed_seconds / number_of_people;
+        workspeed_minutes = float(count) / minutes;
+        workspeed_per_person_minutes = workspeed_minutes / number_of_people;
+
+        Serial.println("z" + String(workspeed_seconds));
+        delay(DELAY);
+        Serial.println("y" + String(workspeed_per_person_seconds));
+        delay(DELAY);
+        Serial.println("x" + String(workspeed_minutes));
+        delay(DELAY);
+        Serial.println("w" + String(workspeed_per_person_minutes));
+        delay(DELAY);
       }
     }
 
-    minutes = (stop_time - start_time) / 60000; // beter gericht op een grote productie
-    seconds = (stop_time - start_time) / 1000; // accurater en geeft een beter beeld bij deze kleine versie
-
-    Serial.println("m" + String(minutes));
-    Serial.println("s" + String(seconds));
+    
 
     while(key != 'C') { // heb ik dit al wel getest??
 
