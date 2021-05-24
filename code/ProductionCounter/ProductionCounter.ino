@@ -232,6 +232,8 @@ void loop() {
 
     done = 0;
 
+    Serial.print("C");
+
     while(done == 0) {
       number_of_people = numberOfPeople();
       delay(1000);
@@ -259,6 +261,7 @@ void loop() {
     lcd.clear();
     lcd.print("Counting...");
     Serial.println("A");
+    Serial.println("c" + String(count));
 
     done = 0;
 
@@ -274,6 +277,9 @@ void loop() {
     minutes = (stop_time - start_time) / 60000; // beter gericht op een grote productie
     seconds = (stop_time - start_time) / 1000; // accurater en geeft een beter beeld bij deze kleine versie
 
+    Serial.println("m" + String(minutes));
+    Serial.println("s" + String(seconds));
+
     while(key != 'C') { // heb ik dit al wel getest??
 
       lcd.clear();
@@ -283,6 +289,9 @@ void loop() {
       while((key = readKey()) == NO_KEY) {
       // wait for key
       }
+      count = 0;
+      number_of_people = 0;
+      product_code = 0;
     }
   
 
