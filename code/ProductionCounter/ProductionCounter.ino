@@ -11,6 +11,10 @@ int product_code;
 float temperature;
 float workspeed;
 float workspeed_per_person;
+unsigned long start_time;
+unsigned long stop_time;
+int minutes;
+int seconds;
 
 /* keypad -------------------- */
 #include <Keypad.h>
@@ -251,6 +255,7 @@ void loop() {
       }
     }
 
+    start_time = millis();
     lcd.clear();
     lcd.print("Counting...");
     Serial.println("A");
@@ -262,10 +267,14 @@ void loop() {
       if (readKey() == 'B') {
         done = 1; // nog timer toevoegen!
         Serial.println("B");
+        stop_time = millis();
       }
     }
 
-    while(key != 'C') {
+    minutes = (stop_time - start_time) / 60000; // beter gericht op een grote productie
+    seconds = (stop_time - start_time) / 1000; // accurater en geeft een beter beeld bij deze kleine versie
+
+    while(key != 'C') { // heb ik dit al wel getest??
 
       lcd.clear();
       lcd.print("Press 'C' to");
