@@ -67,12 +67,7 @@ float readDistance() { // bron:https://create.arduino.cc/projecthub/abdularbi17/
   
   duration = pulseIn(ECHO_PIN, HIGH); 
 
-  temperature = readTemperature();
-
-  //Vair = (331.3 + 0.606 * Tc) m/s with vair = speed of sound and tc temperature in C bron:https://www.instructables.com/Improve-Ultrasonic-Range-Sensor-Accuracy/
-  Vair = (331.3 + 0.606 * temperature);
-
-  distance = (duration * (Vair/100) / 2)/100;
+  distance = (duration * 0.034) / 2;
 
   return distance;
 }
@@ -90,22 +85,6 @@ LiquidCrystal_I2C lcd(0x27,16,2);
  * LCD GND -> GND
  * LCD VCC ->  5V
  */
-
-/* temperature sensor ----------------- */
-#define TEMP_PIN A3
-
-float temp;
-float waarde;
-float spanning;
-
-float readTemperature() { //bron: https://www.conrad.be/info/guides/development-kits/project-arduino-thermometer
-  waarde = analogRead(TEMP_PIN);
-  spanning = (waarde / 1024) * 5;
-  temp = spanning * 10; //!!!!!!!!!!!!!!!!!!!!!!!!!!!in de bron staat maal 100!!!!
-  return temp;
-}
-
-// vanaf bolle kant is GND links, Vout midden, en Vcc rechts !!
 
 /* functies ------------------------- */
 
