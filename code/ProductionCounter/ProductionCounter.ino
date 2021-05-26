@@ -23,8 +23,8 @@ int seconds;
 
 char key;
 
-const byte ROWS = 4; //four rows
-const byte COLS = 4; //four columns
+const byte ROWS = 4;
+const byte COLS = 4;
 char keys[ROWS][COLS] = {
   {'1','2','3','A'},
   {'4','5','6','B'},
@@ -32,17 +32,13 @@ char keys[ROWS][COLS] = {
   {'*','0','#','D'}
 };
 
-byte rowPins[ROWS] = {9, 8, 7, 6}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2}; 
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 char readKey() {
   char key = keypad.getKey();
-  /*
-  if (key){
-    return key;
-  } --> deze check wordt gedaan in de loop */
 
   return key;
 }
@@ -56,34 +52,27 @@ char readKey() {
 long duration;
 int distance;
 
-float readDistance() {
+float readDistance() { // bron:https://create.arduino.cc/projecthub/abdularbi17/ultrasonic-sensor-hc-sr04-with-arduino-tutorial-327ff6
 
   delay(DELAY);
 
   float Vair;
-  // Clears the trigPin condition
+  
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
+  
   duration = pulseIn(ECHO_PIN, HIGH); 
 
   temperature = readTemperature();
 
-  //Serial.println("temp: " + String(temperature));
-
-  //Vair = (331.3 + 0.606 * Tc) m/s with vair = speed of sound and tc temperature in C
+  //Vair = (331.3 + 0.606 * Tc) m/s with vair = speed of sound and tc temperature in C bron:https://www.instructables.com/Improve-Ultrasonic-Range-Sensor-Accuracy/
   Vair = (331.3 + 0.606 * temperature);
 
-  //Serial.println("Vair: " + String(Vair));
-
-  // Calculating the distance
-  distance = (duration * (Vair/100) / 2)/100; // Speed of sound wave divided by 2 (go and back) (0.034)
-
-  //Serial.println("Debug: distance = " + String(distance));
+  distance = (duration * (Vair/100) / 2)/100;
 
   return distance;
 }
@@ -109,11 +98,10 @@ float temp;
 float waarde;
 float spanning;
 
-float readTemperature() {
+float readTemperature() { //bron: https://www.conrad.be/info/guides/development-kits/project-arduino-thermometer
   waarde = analogRead(TEMP_PIN);
   spanning = (waarde / 1024) * 5;
-  temp = spanning * 10;
-  //delay(1000); -> was nodig om een deftige waarde te krijgen als deze code in de loop stond
+  temp = spanning * 10; //!!!!!!!!!!!!!!!!!!!!!!!!!!!in de bron staat maal 100!!!!
   return temp;
 }
 
@@ -121,7 +109,7 @@ float readTemperature() {
 
 /* functies ------------------------- */
 
-char numberOfPeople() { //hier ook nog reset in verwerken (number of people -> nbr of people: )
+char numberOfPeople() {
   int number;
   char enter;
   char key;
@@ -138,7 +126,7 @@ char numberOfPeople() { //hier ook nog reset in verwerken (number of people -> n
   lcd.setCursor(14, 0);
   lcd.print(key);
   Serial.println(key);
-  while((enter = readKey()) == NO_KEY) { // hier kan ik nog een if enter = een getal dan wordt het getal nog mee aan de voorlopig string toegevoegd zoals bij de productcode om ook getallen hoger dan 9 te aanvaarden
+  while((enter = readKey()) == NO_KEY) {
     // wait for key
   }
 
@@ -219,9 +207,9 @@ int countProduction() {
 /* ---------------------------------------------- */
 
 void setup(){
-    pinMode(TRIG_PIN, OUTPUT); // Sets the trigPin as an OUTPUT
+    pinMode(TRIG_PIN, OUTPUT);
     pinMode(ECHO_PIN, INPUT);
-    //pinMode(TEMP_PIN, INPUT); //-> ben niet zeker of dit erbij moet, eens testen of het werkt zonder
+  
     Serial.begin(9600);
 
     lcd.init();
@@ -304,7 +292,7 @@ void loop() {
 
     
 
-    while(key != 'C') { // heb ik dit al wel getest??
+    while(key != 'C') {
 
       lcd.clear();
       lcd.print("Press 'C' to");
@@ -317,13 +305,5 @@ void loop() {
       number_of_people = 0;
       product_code = 0;
     }
-  
-
-  /*
-  countProduction();
-  lcd.clear();
-  lcd.print(count);
-  delay(DELAY);
-  */
 
 }
