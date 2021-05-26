@@ -19,7 +19,7 @@ int minutes;
 int seconds;
 
 /* keypad -------------------- */
-#include <Keypad.h>
+#include <Keypad.h> //auteurs: Mark Stanley, Alexander Brevig Versie: 3.1.1
 
 char key;
 
@@ -80,7 +80,7 @@ float readDistance() { // bron:https://create.arduino.cc/projecthub/abdularbi17/
 
 /* lcd ----------------------- */
 
-#include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal_I2C.h> // Auteur: Frank de Brabander Versie: 1.1.2
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 
